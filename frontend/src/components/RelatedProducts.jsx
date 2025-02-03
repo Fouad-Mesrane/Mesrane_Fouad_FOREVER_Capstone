@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import Title from './Title';
+import ProductItem from './ProductItem';
 
 const RelatedProducts = ({category, subCategory}) => {
 
@@ -19,7 +20,17 @@ const RelatedProducts = ({category, subCategory}) => {
             <Title text1={"RELATED"} text2={"PRODUCTS"} />
         </div>
 
-        <div className=''></div>
+        <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6'>
+            {related.map((item, index) => (
+                <ProductItem
+                key={index}
+                id={item._id}
+                image={item.image}
+                name={item.name}
+                price={item.price}
+              />
+            ))} 
+        </div>
     </div>
   )
 }
