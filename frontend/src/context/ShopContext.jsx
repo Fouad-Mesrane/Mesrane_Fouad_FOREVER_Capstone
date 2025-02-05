@@ -54,9 +54,7 @@ const ShopContextProvider = (props) => {
     return count;
   };
 
-  useEffect(() => {
-    console.log(cartItems);
-  }, [cartItems]);
+
 
   const value = {
     products,
