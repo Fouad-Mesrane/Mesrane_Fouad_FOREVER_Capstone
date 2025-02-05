@@ -2,6 +2,9 @@ import React, { useContext, useState, useEffect } from "react";
 import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
 import { assets } from "../assets/frontend_assets/assets";
+import CartTotal from "../components/CartTotal";
+
+
 const Cart = () => {
   const { products, currency, cartItems, updateQuantity } =
     useContext(ShopContext);
@@ -29,13 +32,13 @@ const Cart = () => {
         <Title text1={"YOUR"} text2={"CART"}></Title>
 
         <div>
-          {cartData.map((item) => {
+          {cartData.map((item,index) => {
             const productData = products.find(
               (product) => product._id === item._id
             );
             return (
               <div
-                key={item._id}
+                key={index}
                 className="py-4 border-b text-gray-700 grid grid-cols-[4fr_0.5fr_0.5fr] sm:grid-cols-[4fr_2fr_0.5fr] items-center gap-4"
               >
                 <div className="flex items-start gap-6">
@@ -83,6 +86,12 @@ const Cart = () => {
               </div>
             );
           })}
+        </div>
+      </div>
+
+      <div className="flex justify-end my-20">
+        <div className="w-full sm:w-[450px]">
+          <CartTotal/>
         </div>
       </div>
     </div>
