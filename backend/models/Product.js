@@ -14,7 +14,7 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    image: {
+    images: {
       type: Array,
       required: true,
     },
@@ -30,11 +30,7 @@ const productSchema = new mongoose.Schema(
       type: Array,
       required: true,
     },
-    date: {
-      type: Date,
-      required: true,
-      default: Date.now,
-    },
+
     bestseller: {
       type: Boolean,
       default: false,

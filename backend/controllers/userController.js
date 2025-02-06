@@ -65,13 +65,12 @@ export const registerUser = async (req, res) => {
       password: hashedPassword,
     });
 
-    // saving user in db
-    const user = await newUser.save();
+   
 
     // generating token
-    const token = createToken(user._id);
+    const token = createToken(newUser._id);
 
-    res.status(201).json({ success: true, user, token });
+    res.status(201).json({ success: true, newUser, token });
   } catch (error) {
     console.log(error);
     res.status(400).json({ success: false, message: error.message });
