@@ -114,7 +114,7 @@ const PlaceOrder = () => {
           </div>
 
           <div className="w-full text-end mt-8">
-            <button onClick={() => navigate("/oreders")} className="bg-black text-white text-sm px-16 py-3">PLACE ORDER</button>
+            <button onClick={() => navigate("/orders")} className="bg-black text-white text-sm px-16 py-3">PLACE ORDER</button>
           </div>
         </div>
       </div>
