@@ -10,7 +10,23 @@ const createToken = (id) => {
 
 // user login
 export const loginUser = async (req, res) => {
-  res.send("Login User");
+    try {
+        const { email, password } = req.body;
+        const user = await User.findOne({ email });
+        if(!user) {
+            return res.status(400).json({success: false, message: "Invalid Credentials"})
+        }
+        // checking password 
+        const isMatch = await bcrypt.compare(password, user.password);
+        if(!isMatch) {
+            return res.status(400).json({success: false, message: "Invalid Credentials"})
+        }
+        const token = createToken(user._id);
+        res.status(200).json({success: true, message: "User logged in successfully", token});
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({success: false, message: error.message})
+    }
 };
 
 // user register
