@@ -10,23 +10,30 @@ const createToken = (id) => {
 
 // user login
 export const loginUser = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const user = await User.findOne({ email });
-        if(!user) {
-            return res.status(400).json({success: false, message: "Invalid Credentials"})
-        }
-        // checking password 
-        const isMatch = await bcrypt.compare(password, user.password);
-        if(!isMatch) {
-            return res.status(400).json({success: false, message: "Invalid Credentials"})
-        }
-        const token = createToken(user._id);
-        res.status(200).json({success: true, message: "User logged in successfully", token});
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({success: false, message: error.message})
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid Credentials" });
     }
+    // checking password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid Credentials" });
+    }
+    const token = createToken(user._id);
+   
+    res
+      .status(200)
+      .json({ success: true, message: "User logged in successfully", token });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ success: false, message: error.message });
+  }
 };
 
 // user register
@@ -65,8 +72,6 @@ export const registerUser = async (req, res) => {
       password: hashedPassword,
     });
 
-   
-
     // generating token
     const token = createToken(newUser._id);
 
@@ -79,5 +84,25 @@ export const registerUser = async (req, res) => {
 
 // admin login
 export const adminLogin = async (req, res) => {
-  res.send("Admin Login");
+  try {
+    const { email, password } = req.body;
+    if (
+      email === process.env.ADMIN_EMAIL &&
+      password === process.env.ADMIN_PASSWORD
+    ) {
+      const token = jwt.sign(email + password, process.env.JWT_SECRET_KEY);
+     
+      res
+        .status(200)
+        .json({
+          success: true,
+          message: "Admin logged in successfully",
+          token,
+        });
+    } else {
+      res.status(400).json({ success: false, message: "Invalid credentials" });
+    }
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
 };
