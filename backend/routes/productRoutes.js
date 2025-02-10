@@ -11,8 +11,8 @@ import { upload } from "../middleware/multer.js";
 const router = express.Router();
 
 router.get("/list", listProducts);
-router.get("/:id", getProductById);
-router.put("/:id", updateProductById);
+router.get("/single", getProductById);
+// router.put("/:id", updateProductById);
 router.post("/remove", deleteProductById);
 router.post(
   "/add",

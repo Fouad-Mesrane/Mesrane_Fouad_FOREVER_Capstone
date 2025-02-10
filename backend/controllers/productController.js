@@ -60,25 +60,25 @@ export const listProducts = async (req, res) => {
 // function for getting product by id
 export const getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.body.productId);
     res.status(200).json({ success: true, product });
   } catch (error) {
     console.log(error);
     res.status(400).json({ success: false, message: error.message });
   }
 };
-// function for updating product by id
-export const updateProductById = async (req, res) => {
-  try {
-    const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    res.status(200).json({ success: true, product });
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({ success: false, message: error.message });
-  }
-};
+// // function for updating product by id
+// export const updateProductById = async (req, res) => {
+//   try {
+//     const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+//       new: true,
+//     });
+//     res.status(200).json({ success: true, product });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(400).json({ success: false, message: error.message });
+//   }
+// };
 
 // function for deleting product by id
 export const deleteProductById = async (req, res) => {
