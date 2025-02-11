@@ -1,13 +1,27 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { backendUrl } from "../App";
+import { toast } from "react-toastify";
 
-const Login = () => {
+const Login = ({ setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const onSubmitHandler = async (e) => {
     try {
       e.preventDefault();
-      
-    } catch (error) {}
+      const response = await axios.post(`${backendUrl}/api/user/admin`, {
+        email,
+        password,
+      });
+      if (response.data.success) {
+        setToken(response.data.token);
+      } else {
+          toast.error(response.data.message);
+      }
+    } catch (error) {
+        console.log(error);
+        toast.error(error.response.data.message);
+    }
   };
 
   return (
@@ -23,7 +37,7 @@ const Login = () => {
               className="rounded-md w-full border border-gray-300 px-3 py-2"
               type="email"
               name=""
-              id=""
+             
               placeholder="Example@example.com"
               required
               onChange={(e) => setEmail(e.target.value)}
@@ -36,7 +50,7 @@ const Login = () => {
               className="rounded-md w-full border border-gray-300 px-3 py-2"
               type="password"
               name=""
-              id=""
+             
               placeholder="Enter your password"
               onChange={(e) => setPassword(e.target.value)}
               value={password}
