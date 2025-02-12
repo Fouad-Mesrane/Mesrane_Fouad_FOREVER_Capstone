@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { products } from "../assets/frontend_assets/assets";
+import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 export const ShopContext = createContext();
@@ -7,9 +7,12 @@ export const ShopContext = createContext();
 const ShopContextProvider = (props) => {
   const currency = "$";
   const deliveryFee = 4.99;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(false);
   const [cartItems, setCartItems] = useState({});
+  const [products, setProducts] = useState([]);
+  const [token, setToken] = useState(null);
   const navigate = useNavigate();
 
   const addToCart = async (itemId, size) => {
@@ -67,20 +70,48 @@ const ShopContextProvider = (props) => {
       delete cartData[itemId];
     }
     setCartItems(cartData);
-  }
+  };
 
   const getCartAmount = () => {
-      let totalAmount = 0;
-      for (const items in cartItems) {
-          const productPrice = products.find((product) => product._id === items).price
-        for (const size in cartItems[items]) {
-          if (cartItems[items][size] > 0) {
-            totalAmount += productPrice * cartItems[items][size];
-          }
+    let totalAmount = 0;
+    for (const items in cartItems) {
+      const productPrice = products.find(
+        (product) => product._id === items
+      ).price;
+      for (const size in cartItems[items]) {
+        if (cartItems[items][size] > 0) {
+          totalAmount += productPrice * cartItems[items][size];
         }
       }
-      return totalAmount;
-  }
+    }
+    return totalAmount;
+  };
+
+  const getProducts = async () => {
+   
+    try {
+      const response = await axios.get(`${backendUrl}/api/product/list`);
+      console.log(response);
+      if (response.data.success) {
+        const data = response.data;
+        setProducts(data.products);
+      }else{
+        toast.error(response.data.message, {
+          autoClose: 1000,
+        })
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message, {
+        autoClose: 1000,
+      });
+    }
+  };
+
+  useEffect(() => {
+    getProducts();
+  }, []);
+
   const value = {
     products,
     currency,
@@ -94,7 +125,11 @@ const ShopContextProvider = (props) => {
     getCartCount,
     updateQuantity,
     getCartAmount,
-    navigate
+    navigate,
+    backendUrl,
+    getProducts,
+    token,
+    setToken
   };
 
   return (

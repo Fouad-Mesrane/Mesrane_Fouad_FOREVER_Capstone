@@ -69,7 +69,7 @@ if (showSearch && search) {
 // initial filter
   useEffect(() => {
     applyFilter();
-  }, [category, subCategory, search, showSearch]);
+  }, [category, subCategory, search, showSearch,products]);
 
   // sort
   useEffect(() => {
@@ -194,13 +194,14 @@ if (showSearch && search) {
         {/* Map product */}
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6">
-          {filterProducts.map((item, index) => (
+          {filterProducts.map((item) => (
+            
             <ProductItem
-              key={index}
+              key={item._id}
               name={item.name}
               id={item._id}
               price={item.price}
-              image={item.image}
+              images={item.images}
             />
           ))}
         </div>

@@ -13,9 +13,10 @@ const Product = () => {
   const [size, setSize] = useState("");
   const fetchProductData = () => {
     products.map((item) => {
+      console.log(item.images);
       if (item._id === productId) {
         setProductData(item);
-        setImage(item.image[0]);
+        setImage(item.images[0]);
         return null;
       }
     });
@@ -32,7 +33,7 @@ const Product = () => {
           {/* Product images */}
           <div className="flex-1 flex flex-col-reverse gap-3 sm:flex-row">
             <div className="flex sm:flex-col overflow-x-auto  sm:overflow-y-scroll justify-between">
-              {productData.image.map((item, index) => {
+              {productData.images.map((item, index) => {
                 return (
                   <img
                     onClick={() => setImage(item)}
