@@ -1,14 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { ShopContext } from "../context/ShopContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [currentState, setCurrentState] = useState("Sign Up");
+  const { token, setToken, navigate, backendUrl } = useContext(ShopContext);
 
-  const onSubmitHandler = (e) => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
-    
+    try {
+      if (currentState === "Sign Up") {
+        const response = await axios.post(`${backendUrl}/api/user/register`, {
+          name,
+          email,
+          password,
+        });
+        console.log(response.data);
+        console.log(name);
+        console.log(email);
+        console.log(password);
+      }
+    } catch (error) {}
   };
   return (
-    <form onSubmit={onSubmitHandler} className="flex flex-col items-center w-[90%] sm:max-w-96 m-auto mt-14 gap-14 text-gray-800">
+    <form
+      onSubmit={onSubmitHandler}
+      className="flex flex-col items-center w-[90%] sm:max-w-96 m-auto mt-14 gap-14 text-gray-800"
+    >
       <div className="flex items-center gap-2 mt-10">
         <p className="prata-regular text-3xl">{currentState}</p>
         <hr className="border-none h-[1.5px] w-8 bg-gray-800" />
@@ -17,9 +39,9 @@ const Login = () => {
         ""
       ) : (
         <input
+          onChange={(e) => setName(e.target.value)}
+          value={name}
           type="text"
-          name=""
-          id=""
           className="w-full px-3 py-2 border border-gray-800"
           placeholder="Name"
           required
@@ -27,17 +49,17 @@ const Login = () => {
       )}
 
       <input
+        onChange={(e) => setEmail(e.target.value)}
+        value={email}
         type="email"
-        name=""
-        id=""
         className="w-full px-3 py-2 border border-gray-800"
         placeholder="Email"
         required
       />
       <input
+        onChange={(e) => setPassword(e.target.value)}
+        value={password}
         type="password"
-        name=""
-        id=""
         className="w-full px-3 py-2 border border-gray-800"
         placeholder="Password"
         required
@@ -60,7 +82,9 @@ const Login = () => {
           </p>
         )}
       </div>
-      <button className ="bg-black text-white px-8 font-medium  w-full py-2">{currentState === "Login" ? "Login" : "Sign Up"}</button>
+      <button className="bg-black text-white px-8 font-medium  w-full py-2">
+        {currentState === "Login" ? "Login" : "Sign Up"}
+      </button>
     </form>
   );
 };
