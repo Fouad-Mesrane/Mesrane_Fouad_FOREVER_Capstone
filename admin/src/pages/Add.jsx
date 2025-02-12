@@ -44,7 +44,9 @@ const Add = ({ token }) => {
         }
       );
       if (response.data.success) {
-        toast.success(response.data.message);
+        toast.success(response.data.message, {
+          autoClose: 1000,
+        });
         setName("");
         setDescription("");
         setCategory("");
@@ -56,12 +58,17 @@ const Add = ({ token }) => {
         setImage2(false);
         setImage3(false);
         setImage4(false);
+       
       } else {
-        toast.error(response.data.message);
+        toast.error(response.data.message, {
+          autoClose: 1000,
+        });
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.message);
+      toast.error(error.response.data.message, {
+        autoClose: 1000,
+      });
     }
   };
 
@@ -204,7 +211,7 @@ const Add = ({ token }) => {
           >
             <p
               className={`bg-slate-200 px-3 py-1 cursor-pointer ${
-                sizes.includes("S") ? "bg-pink-100" : "bg-slate-200"
+                sizes.includes("S") ? "bg-pink-200" : "bg-slate-200"
               }`}
             >
               S
@@ -221,7 +228,7 @@ const Add = ({ token }) => {
           >
             <p
               className={`bg-slate-200 px-3 py-1 cursor-pointer ${
-                sizes.includes("M") ? "bg-pink-100" : "bg-slate-200"
+                sizes.includes("M") ? "bg-pink-200" : "bg-slate-200"
               }`}
             >
               M
@@ -238,7 +245,7 @@ const Add = ({ token }) => {
           >
             <p
               className={`bg-slate-200 px-3 py-1 cursor-pointer ${
-                sizes.includes("L") ? "bg-pink-100" : "bg-slate-200"
+                sizes.includes("L") ? "bg-pink-200" : "bg-slate-200"
               }`}
             >
               L
@@ -255,7 +262,7 @@ const Add = ({ token }) => {
           >
             <p
               className={`bg-slate-200 px-3 py-1 cursor-pointer ${
-                sizes.includes("XL") ? "bg-pink-100" : "bg-slate-200"
+                sizes.includes("XL") ? "bg-pink-200" : "bg-slate-200"
               }`}
             >
               XL
@@ -272,7 +279,7 @@ const Add = ({ token }) => {
           >
             <p
               className={`bg-slate-200 px-3 py-1 cursor-pointer ${
-                sizes.includes("XXL") ? "bg-pink-100" : "bg-slate-200"
+                sizes.includes("XXL") ? "bg-pink-200" : "bg-slate-200"
               }`}
             >
               XXL
