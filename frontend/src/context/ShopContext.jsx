@@ -91,7 +91,7 @@ const ShopContextProvider = (props) => {
    
     try {
       const response = await axios.get(`${backendUrl}/api/product/list`);
-      console.log(response);
+      
       if (response.data.success) {
         const data = response.data;
         setProducts(data.products);
@@ -112,6 +112,12 @@ const ShopContextProvider = (props) => {
     getProducts();
   }, []);
 
+  useEffect(() => {
+    if(!token && localStorage.getItem("token")){
+      setToken(localStorage.getItem("token"));
+      
+    }
+  },[])
   const value = {
     products,
     currency,
