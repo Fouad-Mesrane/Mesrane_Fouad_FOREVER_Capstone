@@ -9,11 +9,13 @@ const Product = () => {
   const { products, currency, addToCart } = useContext(ShopContext);
   const [productData, setProductData] = useState(false);
   const [image, setImage] = useState("");
-
   const [size, setSize] = useState("");
+
+
+  // fetch product data
   const fetchProductData = () => {
     products.map((item) => {
-      console.log(item.images);
+     
       if (item._id === productId) {
         setProductData(item);
         setImage(item.images[0]);

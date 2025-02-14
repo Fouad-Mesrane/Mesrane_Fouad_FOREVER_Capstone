@@ -14,7 +14,7 @@ const Login = () => {
     e.preventDefault();
     try {
       if (currentState === "Sign Up") {
-        console.log(name, email, password);
+        
         const response = await axios.post(
           `${backendUrl}/api/user/register`,
           {
@@ -39,9 +39,11 @@ const Login = () => {
           email,
           password,
         });
+       
         if (response.data.success) {
           setToken(response.data.token);
           localStorage.setItem("token", response.data.token);
+          
         } else {
           toast.error(response.data.message, {
             autoClose: 1000,
