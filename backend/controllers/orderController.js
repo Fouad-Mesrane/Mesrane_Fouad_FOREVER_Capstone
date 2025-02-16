@@ -1,8 +1,10 @@
-import { currency } from "../../admin/src/App.jsx";
 import Order from "../models/Order.js";
 import User from "../models/User.js";
 import Stripe from "stripe";
 
+// global variables
+const currency = "usd";
+const deliveryCharge = 4.99;
 // gateway initializing
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 // Placing an order using COD
@@ -22,13 +24,11 @@ const placeOrder = async (req, res) => {
     const newOrder = await order.save();
     await User.findByIdAndUpdate(userId, { cartData: {} });
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Order placed successfully",
-        order: newOrder,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Order placed successfully",
+      order: newOrder,
+    });
   } catch (error) {
     console.log(error);
     res.status(400).json({ success: false, message: error.message });
@@ -37,42 +37,74 @@ const placeOrder = async (req, res) => {
 
 // Placing an order using Stripe
 const placeOrderStripe = async (req, res) => {
-  try {
-    const { userId, items, amount, address } = req.body;
-    const { origin } = req.headers;
-    const order = new Order({
-      userId,
-      items,
-      amount,
-      address,
-      paymentMethod: "Stripe",
-      payment: false,
-    });
-    const newOrder = await order.save();
-    await User.findByIdAndUpdate(userId, { cartData: {} });
-
-    const line_items = items.map((item) => ({
-      price_data: {
-        currency,
-        product_data: {
-          name: item.name,
-          unit_amount: item.price * 100,
-        },
-        quantity: item.quantitity,
-      },
-    }));
-    line_items.push({
+    try {
+      const { userId, items, amount, address } = req.body;
+      const { origin } = req.headers;
+      const order = new Order({
+        userId,
+        items,
+        amount,
+        address,
+        paymentMethod: "Stripe",
+        payment: false,
+      });
+      const newOrder = await order.save();
+      await User.findByIdAndUpdate(userId, { cartData: {} });
+  
+      const line_items = items.map((item) => ({
         price_data: {
-          currency,
+          currency, 
           product_data: {
-            name: "delivery fee",
-            unit_amount: item.price * 100,
+            name: item.name,
           },
-          quantity: item.quantitity,
+          unit_amount: item.price * 100, 
         },
-      })
-  } catch (error) {}
-};
+        quantity: item.quantity, 
+      }));
+  
+      line_items.push({
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: "Delivery Fee",
+          },
+          unit_amount: deliveryCharge * 100, 
+        },
+        quantity: 1,
+      });
+  
+      const session = await stripe.checkout.sessions.create({
+        success_url: `${origin}/verify?success=true&orderId=${newOrder._id}`,
+        cancel_url: `${origin}/verify?success=false&orderId=${newOrder._id}`,
+        line_items,
+        mode: "payment",
+      });
+  
+      res.json({ success: true, session_url: session.url });
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({ success: false, message: error.message });
+    }
+  };
+
+  // verify stripe 
+  const verifyStripe = async (req,res) => {
+    const {orderId, success, userId} = req.body
+    try {
+        if (success === "true") {
+            await Order.findByIdAndUpdate(orderId, {payment : true})
+            await User.findByIdAndUpdate(userId, {cardData : {}})
+            res.json({success : true})
+        } else {
+            await Order.findByIdAndDelete(orderId)
+            res.json({success : false})
+        }
+    } catch (error) {
+        console.log(error);
+      res.status(400).json({ success: false, message: error.message });
+    }
+  }
+  
 
 // Placing an order using Razorpay
 const placeOrderRazorpay = async (req, res) => {};
@@ -121,4 +153,5 @@ export {
   allOrders,
   userOrders,
   updateOrderStatus,
+  verifyStripe
 };
