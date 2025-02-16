@@ -5,7 +5,7 @@ const orderSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    products : {
+    items : {
         type: Array,
         required: true
     },
@@ -14,7 +14,7 @@ const orderSchema = mongoose.Schema({
         required: true
     },
     address : {
-        type: String,
+        type: Object,
         required: true
     },
     status : {

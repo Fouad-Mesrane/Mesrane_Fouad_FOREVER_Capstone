@@ -5,10 +5,10 @@ import User from "../models/User.js";
 
 const placeOrder = async (req, res) => {
     try {
-        const { userId, products, amount, address } = req.body;
+        const { userId, items, amount, address } = req.body;
         const order = new Order({
             userId,
-            products,
+            items,
             amount,
             address,
             paymentMethod : "COD",
