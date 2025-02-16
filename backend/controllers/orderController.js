@@ -26,7 +26,13 @@ const placeOrder = async (req, res) => {
 };
 
 // Placing an order using Stripe
-const placeOrderStripe = async (req, res) => {};
+const placeOrderStripe = async (req, res) => {
+    try {
+       
+    } catch (error) {
+        
+    }
+};
 
 // Placing an order using Razorpay
 const placeOrderRazorpay = async (req, res) => {};
@@ -36,7 +42,16 @@ const placeOrderRazorpay = async (req, res) => {};
 const allOrders = async (req, res) => {};
 
 // User orders for frontend
-const userOrders = async (req, res) => {};
+const userOrders = async (req, res) => {
+   try {
+    const {userId} = req.body
+    const orders = await Order.find({userId})
+    res.status(200).json({success : true, orders })
+   } catch (error) {
+    console.log(error)
+    res.status(400).json({success : false , message: error.message})
+   }
+};
 
 // update order status from admin panel
 
