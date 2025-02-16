@@ -3,6 +3,7 @@
 
 An advanced full-stack eCommerce application built using the MERN stack (MongoDB, Express.js, React.js, Node.js) with Stripe payment integration.
 
+live version : https://mesrane-fouad-forever-frontend-capstone.vercel.app/
 🚀 Features
 
 🎨 Frontend
