@@ -30,7 +30,7 @@ const CartTotal = () => {
         <b>Total</b>
         <b>
           {currency}
-          {getCartAmount() === 0 ? 0 : getCartAmount() + deliveryFee}
+          {getCartAmount() === 0 ? 0 : (getCartAmount() + deliveryFee).toFixed(2)}
         </b>
       </div>
     </div>
