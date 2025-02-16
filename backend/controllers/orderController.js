@@ -37,77 +37,73 @@ const placeOrder = async (req, res) => {
 
 // Placing an order using Stripe
 const placeOrderStripe = async (req, res) => {
-    try {
-      const { userId, items, amount, address } = req.body;
-      const { origin } = req.headers;
-      const order = new Order({
-        userId,
-        items,
-        amount,
-        address,
-        paymentMethod: "Stripe",
-        payment: false,
-      });
-      const newOrder = await order.save();
-      await User.findByIdAndUpdate(userId, { cartData: {} });
-  
-      const line_items = items.map((item) => ({
-        price_data: {
-          currency, 
-          product_data: {
-            name: item.name,
-          },
-          unit_amount: item.price * 100, 
-        },
-        quantity: item.quantity, 
-      }));
-  
-      line_items.push({
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: "Delivery Fee",
-          },
-          unit_amount: deliveryCharge * 100, 
-        },
-        quantity: 1,
-      });
-  
-      const session = await stripe.checkout.sessions.create({
-        success_url: `${origin}/verify?success=true&orderId=${newOrder._id}`,
-        cancel_url: `${origin}/verify?success=false&orderId=${newOrder._id}`,
-        line_items,
-        mode: "payment",
-      });
-  
-      res.json({ success: true, session_url: session.url });
-    } catch (error) {
-      console.log(error);
-      res.status(400).json({ success: false, message: error.message });
-    }
-  };
+  try {
+    const { userId, items, amount, address } = req.body;
+    const { origin } = req.headers;
+    const order = new Order({
+      userId,
+      items,
+      amount,
+      address,
+      paymentMethod: "Stripe",
+      payment: false,
+    });
+    const newOrder = await order.save();
+    await User.findByIdAndUpdate(userId, { cartData: {} });
 
-  // verify stripe 
-  const verifyStripe = async (req,res) => {
-    const {orderId, success, userId} = req.body
-    try {
-        if (success === "true") {
-            await Order.findByIdAndUpdate(orderId, {payment : true})
-            await User.findByIdAndUpdate(userId, {cardData : {}})
-            res.json({success : true})
-        } else {
-            await Order.findByIdAndDelete(orderId)
-            res.json({success : false})
-        }
-    } catch (error) {
-        console.log(error);
-      res.status(400).json({ success: false, message: error.message });
-    }
+    const line_items = items.map((item) => ({
+      price_data: {
+        currency,
+        product_data: {
+          name: item.name,
+        },
+        unit_amount: item.price * 100,
+      },
+      quantity: item.quantity,
+    }));
+
+    line_items.push({
+      price_data: {
+        currency: "usd",
+        product_data: {
+          name: "Delivery Fee",
+        },
+        unit_amount: deliveryCharge * 100,
+      },
+      quantity: 1,
+    });
+
+    const session = await stripe.checkout.sessions.create({
+      success_url: `${origin}/verify?success=true&orderId=${newOrder._id}`,
+      cancel_url: `${origin}/verify?success=false&orderId=${newOrder._id}`,
+      line_items,
+      mode: "payment",
+    });
+
+    res.json({ success: true, session_url: session.url });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ success: false, message: error.message });
   }
-  
+};
 
-// Placing an order using Razorpay
-const placeOrderRazorpay = async (req, res) => {};
+// verify stripe
+const verifyStripe = async (req, res) => {
+  const { orderId, success, userId } = req.body;
+  try {
+    if (success === "true") {
+      await Order.findByIdAndUpdate(orderId, { payment: true });
+      await User.findByIdAndUpdate(userId, { cardData: {} });
+      res.json({ success: true });
+    } else {
+      await Order.findByIdAndDelete(orderId);
+      res.json({ success: false });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
 
 // Get all orders for admin panel
 
@@ -149,9 +145,8 @@ const updateOrderStatus = async (req, res) => {
 export {
   placeOrder,
   placeOrderStripe,
-  placeOrderRazorpay,
   allOrders,
   userOrders,
   updateOrderStatus,
-  verifyStripe
+  verifyStripe,
 };

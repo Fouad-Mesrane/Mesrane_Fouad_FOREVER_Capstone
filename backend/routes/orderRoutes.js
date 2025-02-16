@@ -2,7 +2,7 @@ import express from "express";
 import {
   allOrders,
   placeOrder,
-  placeOrderRazorpay,
+  
   placeOrderStripe,
   updateOrderStatus,
   userOrders,
@@ -21,7 +21,7 @@ router.post("/status", adminAuth, updateOrderStatus);
 
 router.post("/place", authUser, placeOrder);
 router.post("/stripe", authUser, placeOrderStripe);
-router.post("/razorpay", authUser, placeOrderRazorpay);
+
 
 // verify payment 
 router.post('/verifyStripe', authUser, verifyStripe)
