@@ -1,4 +1,7 @@
 # Mesrane_Fouad_QuickCart_Capstone
+Disclaimer: The images used in this project are for learning and demonstration purposes only. They do not represent actual products for sale, and this eCommerce application is not intended for commercial use. All rights to the images belong to their respective owners.
+
+
 🛒 eCommerce Platform
 
 An advanced full-stack eCommerce application built using the MERN stack (MongoDB, Express.js, React.js, Node.js) with Stripe payment integration.
